@@ -1,30 +1,53 @@
+/**
+ * middleware/validate.js
+ */
 function validateCreateItem(req, res, next) {
-  const { name, description } = req.body;
   const details = [];
+  const { name, description } = req.body;
 
-  if (!name || name.trim().length < 3) details.push({ field: 'name', message: 'Name must be at least 3 characters' });
-  if (!description || description.trim().length < 10) details.push({ field: 'description', message: 'Description must be at least 10 characters' });
+  if (typeof name !== 'string' || name.trim().length < 3) {
+    details.push({ field: 'name', message: 'Name must be at least 3 characters' });
+  }
 
-  if (details.length) return res.status(400).json({ success: false, error: 'Validation failed', details });
+  if (typeof description !== 'string' || description.trim().length < 10) {
+    details.push({ field: 'description', message: 'Description must be at least 10 characters' });
+  }
+
+  if (details.length) {
+    return res.status(400).json({ success: false, error: 'Validation failed', details });
+  }
 
   req.body.name = name.trim();
   req.body.description = description.trim();
-  next();
+
+  return next();
 }
 
 function validateUpdateItem(req, res, next) {
-  const { name, description } = req.body;
   const details = [];
+  const { name, description } = req.body;
 
-  if (!name && !description) details.push({ field: 'body', message: 'Provide name and/or description' });
-  if (name && name.trim().length < 3) details.push({ field: 'name', message: 'Name must be at least 3 characters' });
-  if (description && description.trim().length < 10) details.push({ field: 'description', message: 'Description must be at least 10 characters' });
+  if (name !== undefined) {
+    if (typeof name !== 'string' || name.trim().length < 3) {
+      details.push({ field: 'name', message: 'Name must be at least 3 characters' });
+    } else {
+      req.body.name = name.trim();
+    }
+  }
 
-  if (details.length) return res.status(400).json({ success: false, error: 'Validation failed', details });
+  if (description !== undefined) {
+    if (typeof description !== 'string' || description.trim().length < 10) {
+      details.push({ field: 'description', message: 'Description must be at least 10 characters' });
+    } else {
+      req.body.description = description.trim();
+    }
+  }
 
-  if (name) req.body.name = name.trim();
-  if (description) req.body.description = description.trim();
-  next();
+  if (details.length) {
+    return res.status(400).json({ success: false, error: 'Validation failed', details });
+  }
+
+  return next();
 }
 
 export default { validateCreateItem, validateUpdateItem };

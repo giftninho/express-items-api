@@ -1,13 +1,25 @@
-import { Router } from 'express';
-const router = Router();
+/**
+ * routes/items.js
+ */
+const express = require('express');
+const router = express.Router();
 
-import { getAllItems, getItem, createItem, updateItem, deleteItem } from '../controllers/itemsController';
-import { validateCreateItem, validateUpdateItem } from '../middleware/validate';
+const ctrl = require('../controllers/itemsController').default;
+const { validateCreateItem, validateUpdateItem } = require('../middleware/validate').default;
 
-router.get('/', getAllItems);
-router.get('/:id', getItem);
-router.post('/', validateCreateItem, createItem);
-router.put('/:id', validateUpdateItem, updateItem);
-router.delete('/:id', deleteItem);
+// GET /items
+router.get('/', ctrl.getAllItems);
+
+// GET /items/:id
+router.get('/:id', ctrl.getItem);
+
+// POST /items
+router.post('/', validateCreateItem, ctrl.createItem);
+
+// PUT /items/:id
+router.put('/:id', validateUpdateItem, ctrl.updateItem);
+
+// DELETE /items/:id
+router.delete('/:id', ctrl.deleteItem);
 
 export default router;
