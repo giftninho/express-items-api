@@ -1,13 +1,14 @@
-import express, { json, urlencoded } from 'express';
-import morgan from 'morgan';
+// app.js (CommonJS)
+const express = require('express');
+const morgan = require('morgan');
 
-import itemsRouter from './routes/items';
-import { notFoundHandler, errorHandler } from './middleware/errorHandler';
+const itemsRouter = require('./routes/items'); // CommonJS style, no .js extension needed
+const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
 
-app.use(json());
-app.use(urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 app.get('/', (req, res) => {
@@ -16,10 +17,11 @@ app.get('/', (req, res) => {
 
 app.use('/items', itemsRouter);
 
+// 404 and error handlers
 app.use(notFoundHandler);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Items API running at http://localhost:${PORT}`));
-
-export default app;
+app.listen(PORT, () => {
+  console.log(`Items API listening at http://localhost:${PORT}`);
+});

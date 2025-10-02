@@ -1,6 +1,4 @@
-/**
- * middleware/validate.js
- */
+// middleware/validate.js (CommonJS)
 function validateCreateItem(req, res, next) {
   const details = [];
   const { name, description } = req.body;
@@ -19,7 +17,6 @@ function validateCreateItem(req, res, next) {
 
   req.body.name = name.trim();
   req.body.description = description.trim();
-
   return next();
 }
 
@@ -46,8 +43,7 @@ function validateUpdateItem(req, res, next) {
   if (details.length) {
     return res.status(400).json({ success: false, error: 'Validation failed', details });
   }
-
   return next();
 }
 
-export default { validateCreateItem, validateUpdateItem };
+module.exports = { validateCreateItem, validateUpdateItem };

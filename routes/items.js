@@ -1,11 +1,9 @@
-/**
- * routes/items.js
- */
+// routes/items.js (CommonJS)
 const express = require('express');
 const router = express.Router();
 
-const ctrl = require('../controllers/itemsController').default;
-const { validateCreateItem, validateUpdateItem } = require('../middleware/validate').default;
+const ctrl = require('../controllers/itemsController');
+const { validateCreateItem, validateUpdateItem } = require('../middleware/validate');
 
 // GET /items
 router.get('/', ctrl.getAllItems);
@@ -22,4 +20,4 @@ router.put('/:id', validateUpdateItem, ctrl.updateItem);
 // DELETE /items/:id
 router.delete('/:id', ctrl.deleteItem);
 
-export default router;
+module.exports = router;
